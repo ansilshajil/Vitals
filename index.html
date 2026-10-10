@@ -1,23 +1,4 @@
 
-
-
-Skip to content
-Using Gmail with screen readers
-
-1 of 6,153
-(no subject)
-Inbox
-
-Ansil Shajil <ansilsshajilindia@gmail.com>
-Attachments
-5:46 PM (1 minute ago)
-to me
-
-
-
-Taerg eht Lisna ma I
- One attachment
-  •  Scanned by Gmail
 <!doctype html>
 <html lang="en">
 <head>
@@ -114,7 +95,7 @@ var SCOPES=[
 ].join(' ');
 var BASE='https://health.googleapis.com/v4/users/me/dataTypes/';
 var S={clientId:'',profile:{age:null,sex:null,sleepNeed:8},days:{},synced:null};
-var token=null,tokenExp=0,busy=false,status='',logs=[];
+var token=null,tokenExp=0,busy=false,status='',logs=[],grantedScopes='';
 
 function load(){
   try{
@@ -162,7 +143,7 @@ async function fetchPages(type,filter,pageSize,maxPages){
         else{useFilter=false;log(type+': retrying without date filter')}
         i=-1;continue;
       }
-      log(type+': HTTP '+res.status+' '+body.replace(/\s+/g,' ').slice(0,220));
+      log(type+': HTTP '+res.status+' '+body.replace(/\s+/g,' ').slice(0,700));
       if(res.status===401){token=null;tokenExp=0}
       throw new Error('http'+res.status);
     }
@@ -177,7 +158,9 @@ async function fetchPages(type,filter,pageSize,maxPages){
 
 async function syncAll(){
   if(busy)return;
-  busy=true;logs=[];status='Loading your data from Google Health…';render();
+  busy=true;logs=[];
+  if(grantedScopes)log('Granted scopes: '+grantedScopes.replace(/https:\/\/www\.googleapis\.com\/auth\//g,''));
+  status='Loading your data from Google Health…';render();
   var today=todayStr(),since=addDays(today,-35),zSince=addDays(today,-10);
   var days={};
   function get(k){return days[k]||(days[k]={})}
@@ -233,9 +216,9 @@ function connect(){
   if(token&&Date.now()<tokenExp){syncAll();return}
   if(!(window.google&&google.accounts&&google.accounts.oauth2)){status='Google sign-in is still loading. Try again in a moment.';render();return}
   var c=google.accounts.oauth2.initTokenClient({
-    client_id:S.clientId,scope:SCOPES,
+    client_id:S.clientId,scope:SCOPES,include_granted_scopes:false,
     callback:function(r){
-      if(r&&r.access_token){token=r.access_token;tokenExp=Date.now()+((r.expires_in||3000)-60)*1000;syncAll()}
+      if(r&&r.access_token){grantedScopes=r.scope||'';token=r.access_token;tokenExp=Date.now()+((r.expires_in||3000)-60)*1000;syncAll()}
       else{status='Sign-in did not complete.'+(r&&r.error?' ('+r.error+')':'');render()}
     },
     error_callback:function(e){status='Sign-in was closed or blocked ('+((e&&e.type)||'error')+').';render()}
@@ -402,5 +385,5 @@ load();render();
 </script>
 </body>
 </html>
-index.html
-Displaying index.html.
+index2.html
+Displaying index2.html.
