@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<title>Vitals Recovery & Healthspan</title>
+<title>Vitals Recovery</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@ function applyTheme(){document.documentElement.removeAttribute('data-theme');if(
 
 async function fetchPages(type,filter,pageSize,maxPages){let out=[],pageToken='',useFilter=!!filter,usePS=!!pageSize;for(let i=0;i<maxPages;i++){const q=[];if(useFilter)q.push('filter='+encodeURIComponent(filter));if(usePS)q.push('pageSize='+pageSize);if(pageToken)q.push('pageToken='+encodeURIComponent(pageToken));let res;try{res=await fetch(BASE+type+'/dataPoints'+(q.length?'?'+q.join('&'):''),{headers:{Authorization:'Bearer '+token}})}catch(e){log(type+': network/CORS failure');throw e}if(!res.ok){const body=await res.text().catch(()=>'');if(res.status===400&&i===0&&(usePS||useFilter)){if(usePS){usePS=false;log(type+': retrying without pageSize')}else{useFilter=false;log(type+': retrying without filter')}i=-1;continue}log(`${type}: HTTP ${res.status} ${body.replace(/\s+/g,' ').slice(0,600)}`);if(res.status===401){token=null;tokenExp=0}throw new Error('HTTP '+res.status)}const j=await res.json();out.push(...(j.dataPoints||[]));pageToken=j.nextPageToken||'';if(!pageToken)break}log(`${type}: ${out.length} data points`);return out}
 
-async function syncAll(){if(busy)return;busy=true;logs=[];if(grantedScopes)log('Granted scopes: '+grantedScopes.replaceAll('https://www.googleapis.com/auth/',''));status='Loading Google Health data…';render();const today=todayStr(),since=addDays(today,-190),activitySince=addDays(today,-190),days={};const get=k=>days[k]||(days[k]={});const jobs=[
+async function syncAll(){if(busy)return;busy=true;logs=[];if(grantedScopes)log('Granted scopes: '+grantedScopes.replaceAll('https://www.googleapis.com/auth/',''));status='Loading Google Health data…';render();const today=todayStr(),since=addDays(today,-49),activitySince=addDays(today,-35),days={};const get=k=>days[k]||(days[k]={});const jobs=[
 ['daily-heart-rate-variability',`daily_heart_rate_variability.date >= "${since}"`,0,8,dp=>{const o=dp.dailyHeartRateVariability,v=o&&num(o.averageHeartRateVariabilityMilliseconds);if(o&&o.date&&v!=null&&v>0)get(ds(o.date)).hrv=v}],
 ['daily-resting-heart-rate',`daily_resting_heart_rate.date >= "${since}"`,0,8,dp=>{const o=dp.dailyRestingHeartRate,v=o&&num(o.beatsPerMinute);if(o&&o.date&&v!=null&&v>0)get(ds(o.date)).rhr=v}],
 ['daily-vo2-max',`daily_vo2_max.date >= "${since}"`,0,8,dp=>{const o=dp.dailyVo2Max,v=o&&num(o.vo2Max);if(o&&o.date&&v!=null)get(ds(o.date)).vo2=v}],
@@ -65,69 +65,8 @@ const rhrSignal=avgLast(prior.slice(-2).concat(d).filter(x=>x.rhr>0).map(x=>x.rh
 const recentSleep=prior.slice(-6).concat(d).map(sleepScoreForDay).filter(v=>v!=null),sleepAvg=avgLast(recentSleep,7),sleepSignal=recentSleep.length?.65*(out.sleep??sleepAvg)+.35*sleepAvg:null;out.components.sleep=sleepSignal==null?null:clamp((sleepSignal-80)/12,-2.5,2.5);
 const yesterday=idx>0?S.days[all[idx-1]]:null,yLoad=trimpForDay(yesterday),loadBase=prior.slice(-28).map(trimpForDay).filter(v=>v!=null),loadZ=robustZ(yLoad,loadBase,25);out.components.load=loadZ==null?null:-Math.max(0,loadZ);
 const parts=[{w:.45,v:out.components.hrv},{w:.25,v:out.components.rhr},{w:.25,v:out.components.sleep},{w:.05,v:out.components.load}],comp=weightedMean(parts),available=parts.filter(p=>p.v!=null).reduce((s,p)=>s+p.w,0),baselineDays=Math.min(hrvBase.length,rhrBase.length);out.confidence=Math.round(100*clamp(available*(baselineDays/21),0,1));if(hrvZ!=null&&hrvZ<-1)out.flags.push('HRV trend is below baseline');if(out.components.rhr!=null&&out.components.rhr<-1)out.flags.push('Resting HR is above baseline');if(out.sleep!=null&&out.sleep<70)out.flags.push('Sleep was below target');if(loadZ!=null&&loadZ>1.5)out.flags.push('Yesterday’s load was unusually high');if(comp==null||available<.55||baselineDays<7){out.note=baselineDays<7?`Needs about ${7-baselineDays} more baseline day${7-baselineDays===1?'':'s'}.`:'Not enough usable signals.';return out}out.recovery=Math.round(100/(1+Math.exp(-(.95*clamp(comp,-2.5,2.5)+.3))));const u=out.confidence>=80?6:out.confidence>=60?10:14;out.recoveryLow=clamp(out.recovery-u,0,100);out.recoveryHigh=clamp(out.recovery+u,0,100);out.status=out.recovery>=67?'ready':out.recovery>=34?'caution':'recover';out.note=`Estimated range ${out.recoveryLow}–${out.recoveryHigh}; confidence ${out.confidence}%.`;return out}
-function valuesThrough(date,key,daysBack){
-  const first=addDays(date,-daysBack+1);
-  return dates().filter(k=>k>=first&&k<=date).map(k=>S.days[k]&&S.days[k][key]).filter(v=>v!=null&&Number.isFinite(v));
-}
-function averageDailyZoneMinutes(date,daysBack){
-  const first=addDays(date,-daysBack+1),keys=dates().filter(k=>k>=first&&k<=date);
-  if(!keys.length)return null;
-  let total=0,valid=0;
-  keys.forEach(k=>{const d=S.days[k];if(!d||!d.z)return;valid++;Object.values(d.z).forEach(v=>{if(Number.isFinite(v))total+=v})});
-  return valid?total/valid:null;
-}
-function vo2FitnessAge(vo2,sex){
-  /* HUNT3 age-band means represented at band midpoints. Interpolation creates
-     a continuous population-reference comparison, not a clinical age. */
-  const norms=sex==='m'
-    ? [[25,54],[35,49],[45,47],[55,42],[65,39],[75,34]]
-    : [[25,43],[35,40],[45,38],[55,34],[65,31],[75,27]];
-  if(vo2>=norms[0][1]){
-    const slope=(norms[1][0]-norms[0][0])/(norms[1][1]-norms[0][1]);
-    return clamp(norms[0][0]+slope*(vo2-norms[0][1]),18,90);
-  }
-  for(let i=0;i<norms.length-1;i++){
-    const [a1,v1]=norms[i],[a2,v2]=norms[i+1];
-    if(vo2<=v1&&vo2>=v2)return a1+(v1-vo2)/(v1-v2)*(a2-a1);
-  }
-  const n=norms.length,slope=(norms[n-1][0]-norms[n-2][0])/(norms[n-1][1]-norms[n-2][1]);
-  return clamp(norms[n-1][0]+slope*(vo2-norms[n-1][1]),18,90);
-}
-function healthspanSnapshot(date,windowDays){
-  const p=S.profile;if(!p.age||!p.sex)return null;
-  const vo2s=valuesThrough(date,'vo2',windowDays),vo2=vo2s.length?median(vo2s):null;
-  if(vo2==null)return null;
-  const anchor=vo2FitnessAge(vo2,p.sex);
-  const sleeps=valuesThrough(date,'sleepH',windowDays),sleep=sleeps.length?mean(sleeps):null;
-  const rhrs=valuesThrough(date,'rhr',windowDays),rhr=rhrs.length?median(rhrs):null;
-  const activity=averageDailyZoneMinutes(date,windowDays);
-  const need=clamp(num(p.sleepNeed)||8,6,10);
-
-  /* Transparent wellness modifiers. These are deliberately small and capped.
-     They are product calibration, not coefficients from KDM, PhenoAge or WHOOP. */
-  const sleepDelta=sleep==null?0:clamp((need-sleep)*1.25,-2,2);
-  const rhrDelta=rhr==null?0:clamp((rhr-65)/7,-2,2);
-  const activityDelta=activity==null?0:clamp((25-activity)/12.5,-2,2);
-  const modifiers=sleepDelta+rhrDelta+activityDelta;
-  const age=clamp(anchor+modifiers,p.age-15,p.age+15);
-  const validDays=new Set([
-    ...dates().filter(k=>k<=date&&k>=addDays(date,-windowDays+1)&&S.days[k].sleepH!=null),
-    ...dates().filter(k=>k<=date&&k>=addDays(date,-windowDays+1)&&S.days[k].rhr!=null)
-  ]).size;
-  const confidence=Math.round(100*clamp((vo2s.length?0.45:0)+(Math.min(validDays,90)/90)*0.35+(activity!=null?0.20:0),0,1));
-  return {age,anchor,vo2,sleep,rhr,activity,confidence,validDays,windowDays,adjustments:{sleep:sleepDelta,rhr:rhrDelta,activity:activityDelta}};
-}
-function healthspanAge(date){
-  const long=healthspanSnapshot(date,180);if(!long)return null;
-  const recent=healthspanSnapshot(date,30);
-  let pace=null;
-  if(recent&&recent.validDays>=21){
-    /* Directional lifestyle trend centred at 1.00x. It is not literal
-       biological aging over 30 days; cap prevents false precision. */
-    pace=clamp(1+(recent.age-long.age)/5,0.5,1.5);
-  }
-  return Object.assign({},long,{pace,recentAge:recent&&recent.age});
-}
+function latestVo2(){const a=dates().filter(k=>S.days[k].vo2!=null);return a.length?S.days[a.at(-1)].vo2:null}
+function fitnessAge(){const p=S.profile,vo2=latestVo2();if(!p.age||!p.sex||vo2==null)return null;const a=p.sex==='m'?49.5:42.9,b=p.sex==='m'?.30:.275,raw=p.age-(vo2-(a-b*p.age))/b;return {age:clamp(raw,18,90),vo2}}
 
 function recColor(v){return v>=67?'var(--good)':v>=34?'var(--mid)':'var(--bad)'}function sleepColor(v){return v>=85?'var(--good)':v>=70?'var(--mid)':'var(--bad)'}
 function spark(vals,color){const pts=[];vals.forEach((v,i)=>{if(v!=null)pts.push([i,v])});if(pts.length<2)return '<span class="small muted">not enough data</span>';const ys=pts.map(p=>p[1]),mn=Math.min(...ys),mx=Math.max(...ys),rng=mx-mn||1,W=160,H=44,N=vals.length-1||1,path=pts.map(p=>`${(p[0]/N*W).toFixed(1)},${(H-4-(p[1]-mn)/rng*(H-8)).toFixed(1)}`).join(' '),l=pts.at(-1);return `<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="Trend"><polyline points="${path}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${(l[0]/N*W).toFixed(1)}" cy="${(H-4-(l[1]-mn)/rng*(H-8)).toFixed(1)}" r="3.2" fill="${color}"/></svg>`}
@@ -138,7 +77,7 @@ function setupHtml(){return `<section><h2>Connect Google Health</h2><p class="no
 function connectHtml(){return `<section><h2>Sync health data</h2><p class="note">Sign in and grant read-only access to sleep, health metrics, and activity. Health data remains in this browser.</p><button class="btn primary" onclick="connect()" ${busy?'disabled':''}>Sign in with Google</button></section>`}
 function dashHtml(){const usable=dates().filter(k=>{const d=S.days[k];return d.hrv!=null||d.rhr!=null||d.sleepMin!=null});if(!usable.length)return `<section><h2>No usable data</h2><p class="note">Sync returned no HRV, resting heart rate, or sleep records. Review Sync details below.</p></section>`;const date=usable.at(-1),d=S.days[date],s=scoresFor(date),color=s.recovery==null?'rgba(255,255,255,.35)':recColor(s.recovery),f=(s.recovery||0)/100,R=90,C=2*Math.PI*R,msg=s.recovery==null?s.note:s.status==='ready'?'Signals are favorable. Train as planned if you also feel well.':s.status==='caution'?'Mixed signals. Keep intensity flexible and reassess after warm-up.':'Recovery signals are suppressed. Favor easy training or rest, especially if you feel unwell.',sleepSub=d.sleepH!=null?`${d.sleepH.toFixed(1)} h asleep${d.eff!=null?', '+Math.round(d.eff)+'% efficiency':''}`:'No sleep found';let html=`<section class="hero"><div class="date">${nice(date)}</div><div class="ringwrap"><svg viewBox="0 0 220 220" aria-label="Recovery estimate"><circle cx="110" cy="110" r="${R}" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="14"/><circle cx="110" cy="110" r="${R}" fill="none" stroke="${color}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${(C*f).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 110 110)"/></svg><div class="ringtxt"><b>${s.recovery??'–'}</b><span>Recovery estimate</span></div></div><p class="msg">${esc(msg)}</p><p class="range">${esc(s.note)}${s.flags.length?' · '+esc(s.flags.join(' · ')):''}</p><div class="two">${meter('Strain',s.strain==null?'–':s.strain.toFixed(1),(s.strain||0)/21,'var(--info)',s.strain==null?'No zone data':`Today’s load ${s.trimp}`)}${meter('Sleep',s.sleep??'–',(s.sleep||0)/100,s.sleep==null?'rgba(255,255,255,.3)':sleepColor(s.sleep),sleepSub)}</div></section>`;
 html+=`<section><h2>Recovery factors</h2><p class="note">Standardized against your own recent baseline. Positive values are favorable.</p><ul class="factors">${factor('HRV trend',s.components.hrv)}${factor('Resting heart rate',s.components.rhr)}${factor('Sleep',s.components.sleep)}${factor('Prior-day load',s.components.load)}</ul></section>`;
-const hs=healthspanAge(date);html+=hs?`<section><h2>Healthspan age</h2><div class="cards"><div class="card"><div class="label">Healthspan age</div><div class="value">${hs.age.toFixed(1)}</div><div class="detail">${(hs.age-S.profile.age)<=0?Math.abs(hs.age-S.profile.age).toFixed(1)+' years younger':(hs.age-S.profile.age).toFixed(1)+' years older'}</div></div><div class="card"><div class="label">Pace indicator</div><div class="value">${hs.pace==null?'–':hs.pace.toFixed(2)+'×'}</div><div class="detail">${hs.pace==null?'Needs 21 recent valid days':'30-day trend vs long term'}</div></div><div class="card"><div class="label">VO₂ fitness-age anchor</div><div class="value">${hs.anchor.toFixed(1)}</div><div class="detail">VO₂max ${hs.vo2.toFixed(1)}</div></div><div class="card"><div class="label">Confidence</div><div class="value">${hs.confidence}%</div><div class="detail">${hs.validDays} valid trend days</div></div></div><ul class="factors"><li><div><div class="factor-title">Sleep modifier</div><div class="factor-note">Long-term sleep vs personal need</div></div><div class="factor-score ${hs.adjustments.sleep<=0?'good':'bad'}">${hs.adjustments.sleep>0?'+':''}${hs.adjustments.sleep.toFixed(1)} yr</div></li><li><div><div class="factor-title">Resting-HR modifier</div><div class="factor-note">Capped wellness calibration</div></div><div class="factor-score ${hs.adjustments.rhr<=0?'good':'bad'}">${hs.adjustments.rhr>0?'+':''}${hs.adjustments.rhr.toFixed(1)} yr</div></li><li><div><div class="factor-title">Activity modifier</div><div class="factor-note">Average recorded zone minutes</div></div><div class="factor-score ${hs.adjustments.activity<=0?'good':'bad'}">${hs.adjustments.activity>0?'+':''}${hs.adjustments.activity.toFixed(1)} yr</div></li></ul><div class="warn small">The VO₂max anchor uses published population reference values. Sleep, resting-HR and activity adjustments are transparent, capped wellness heuristics. This is not clinical biological age, KDM, PhenoAge, or WHOOP’s proprietary score.</div></section>`:`<section><h2>Healthspan age</h2><p class="note">Add age and sex in Settings and sync a VO₂max record. The estimate improves as up to 180 days of sleep, resting-heart-rate and activity data accumulate.</p></section>`;
+const fa=fitnessAge();html+=fa?`<section><h2>Fitness age estimate</h2><div class="cards"><div class="card"><div class="label">VO₂max</div><div class="value">${fa.vo2.toFixed(1)}</div><div class="detail">mL/kg/min</div></div><div class="card"><div class="label">Estimated fitness age</div><div class="value">${fa.age.toFixed(1)}</div><div class="detail">VO₂max heuristic</div></div></div><div class="warn small">This is a fitness-age approximation, not biological age or a clinical result.</div></section>`:`<section><h2>Fitness age estimate</h2><p class="note">Add age and sex in Settings and sync a VO₂max record to display this estimate.</p></section>`;
 const last=usable.slice(-14);if(last.length>=2){const row=(l,v,u)=>{const x=[...v].reverse().find(n=>n!=null);return `<div class="trow"><div><div class="tl">${l}</div><div class="tv">${x==null?'–':Math.round(x*10)/10}${u}</div></div>${spark(v,'var(--accent)')}</div>`};html+=`<section><h2>Last ${last.length} days</h2>${row('Recovery',last.map(k=>scoresFor(k).recovery),'')}${row('HRV',last.map(k=>S.days[k].hrv??null),' ms')}${row('Resting HR',last.map(k=>S.days[k].rhr??null),' bpm')}${row('Strain',last.map(k=>scoresFor(k).strain),'')}</section>`}return html}
 function settingsHtml(){const p=S.profile,v=x=>x==null?'':x;return `<details><summary>Settings</summary><div class="grid" style="margin-top:12px"><div><label for="p_age">Age</label><input id="p_age" type="number" min="18" max="100" value="${v(p.age)}" onchange="setP('age',num(this.value))"></div><div><label for="p_sex">Sex used by VO₂max equation</label><select id="p_sex" onchange="setP('sex',this.value||null)"><option value="">Select</option><option value="m" ${p.sex==='m'?'selected':''}>Male</option><option value="f" ${p.sex==='f'?'selected':''}>Female</option></select></div><div><label for="p_sn">Personal sleep need</label><input id="p_sn" type="number" min="6" max="10" step="0.1" value="${v(p.sleepNeed)}" onchange="setP('sleepNeed',num(this.value))"></div><div><label for="p_theme">Theme</label><select id="p_theme" onchange="setTheme(this.value)"><option value="system" ${S.theme==='system'?'selected':''}>System</option><option value="light" ${S.theme==='light'?'selected':''}>Light</option><option value="dark" ${S.theme==='dark'?'selected':''}>Dark</option></select></div><div style="grid-column:1/-1"><label for="p_cid">Google client ID</label><input id="p_cid" value="${esc(S.clientId)}" onchange="setCid(this.value)" spellcheck="false"></div></div><div class="btns"><button id="clr" class="btn" onclick="clearAll()">Erase saved health data</button></div></details>`}
 function diagHtml(){return `<details><summary>Sync details</summary><pre>${logs.length?esc(logs.join('\n')):'No sync in this session.'}</pre></details>`}
