@@ -1,0 +1,406 @@
+
+
+
+Skip to content
+Using Gmail with screen readers
+
+1 of 6,153
+(no subject)
+Inbox
+
+Ansil Shajil <ansilsshajilindia@gmail.com>
+Attachments
+5:46 PM (1 minute ago)
+to me
+
+
+
+Taerg eht Lisna ma I
+ One attachment
+  •  Scanned by Gmail
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vitals</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{
+  --bg:#EEF1EE;--panel:#0F2623;--panel-text:#EAF3EF;--panel-muted:#93AAA3;
+  --text:#14211E;--muted:#5B6B66;--line:#D2DAD5;--field:#FFFFFF;
+  --accent:#0E7C66;--good:#1FA463;--mid:#D99A0B;--bad:#D8453B;
+  --num:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1211;--panel:#14302C;--panel-text:#E6EFEB;--panel-muted:#8DA19A;
+    --text:#E6EFEB;--muted:#8DA19A;--line:#22332F;--field:#111B19;
+    --accent:#3CC9A5;--good:#3DD488;--mid:#F0B93A;--bad:#F2675D;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1211;--panel:#14302C;--panel-text:#E6EFEB;--panel-muted:#8DA19A;
+  --text:#E6EFEB;--muted:#8DA19A;--line:#22332F;--field:#111B19;
+  --accent:#3CC9A5;--good:#3DD488;--mid:#F0B93A;--bad:#F2675D;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+#app{max-width:520px;margin:0 auto;padding:0 18px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0 6px}
+h1{font-family:var(--num);font-weight:700;font-size:30px;letter-spacing:.01em;margin:0}
+h2{font-family:var(--num);font-weight:700;font-size:24px;margin:0 0 8px}
+.sub{font-size:13px;color:var(--muted)}
+section{padding:22px 0;border-top:1px solid var(--line)}
+section.hero{border-top:0;background:var(--panel);color:var(--panel-text);border-radius:14px;padding:22px 20px 24px;margin-top:10px}
+.date{font-size:15px;color:var(--panel-muted)}
+.ringwrap{position:relative;width:min(72vw,270px);aspect-ratio:1;margin:10px auto 6px}
+.ringwrap svg{width:100%;height:100%;display:block}
+.ringtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ringtxt b{font-family:var(--num);font-weight:700;font-size:clamp(64px,22vw,96px);line-height:.95}
+.ringtxt span{font-size:15px;color:var(--panel-muted)}
+.msg{text-align:center;margin:6px 0 18px;font-size:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.meter .top{display:flex;justify-content:space-between;align-items:baseline}
+.meter .lab{font-size:15px;color:var(--panel-muted)}
+.meter .val{font-family:var(--num);font-weight:700;font-size:34px;line-height:1}
+.meter .track{height:6px;border-radius:3px;background:rgba(255,255,255,.14);margin:6px 0 4px;overflow:hidden}
+.meter .fill{height:100%;border-radius:3px}
+.meter .subt{font-size:13px;color:var(--panel-muted)}
+.bio{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:4px 0 10px}
+.bio b{font-family:var(--num);font-weight:700;font-size:64px;line-height:1}
+.good{color:var(--good)}.bad{color:var(--bad)}
+.lines{list-style:none;margin:0 0 10px;padding:0}
+.lines li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
+.muted{color:var(--muted)}.small{font-size:13px}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.tl{font-size:14px;color:var(--muted)}
+.tv{font-family:var(--num);font-weight:700;font-size:28px;line-height:1.1}
+.spark{width:55%;max-width:200px;height:44px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:14px;color:var(--muted);margin-bottom:4px}
+input,select{width:100%;font:400 16px var(--body);color:var(--text);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:10px 11px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{font:600 16px var(--body);padding:11px 16px;border-radius:8px;border:1px solid var(--line);background:var(--field);color:var(--text);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.sm{padding:8px 12px;font-size:14px}
+:root[data-theme="dark"] .btn.primary{color:#06201a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{color:#06201a}}
+.btn:disabled{opacity:.6;cursor:default}
+.btn:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:14px;color:var(--muted);margin:0 0 14px}
+.status{font-size:14px;margin-top:10px}
+details{border-top:1px solid var(--line);padding:16px 0}
+summary{cursor:pointer;font-family:var(--num);font-weight:700;font-size:22px}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px;color:var(--muted);margin:10px 0 0;max-height:260px;overflow:auto}
+.footer{padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var KEY='vitals_sync_v1';
+var SCOPES=[
+ 'https://www.googleapis.com/auth/googlehealth.sleep.readonly',
+ 'https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly',
+ 'https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly'
+].join(' ');
+var BASE='https://health.googleapis.com/v4/users/me/dataTypes/';
+var S={clientId:'',profile:{age:null,sex:null,sleepNeed:8},days:{},synced:null};
+var token=null,tokenExp=0,busy=false,status='',logs=[];
+
+function load(){
+  try{
+    var r=localStorage.getItem(KEY);
+    if(r){var s=JSON.parse(r);
+      if(s.clientId)S.clientId=s.clientId;
+      if(s.profile)S.profile=Object.assign({age:null,sex:null,sleepNeed:8},s.profile);
+      if(s.days)S.days=s.days;
+      if(s.synced)S.synced=s.synced;}
+  }catch(e){}
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+function $(id){return document.getElementById(id)}
+function mean(a){return a.reduce(function(x,y){return x+y},0)/a.length}
+function sd(a){var m=mean(a);return Math.sqrt(a.reduce(function(x,y){return x+(y-m)*(y-m)},0)/Math.max(a.length-1,1))}
+function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
+function num(v){var x=parseFloat(v);return isFinite(x)?x:null}
+function pad(n){return String(n).padStart(2,'0')}
+function fmtDate(dt){return dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate())}
+function todayStr(){return fmtDate(new Date())}
+function addDays(s,k){var p=s.split('-').map(Number);return fmtDate(new Date(p[0],p[1]-1,p[2]+k))}
+function ds(o){return o.year+'-'+pad(o.month)+'-'+pad(o.day)}
+function nice(s){var p=s.split('-').map(Number);try{return new Date(p[0],p[1]-1,p[2]).toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})}catch(e){return s}}
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function log(m){logs.push(m)}
+function dates(){return Object.keys(S.days).sort()}
+
+/* ---------- fetching ---------- */
+async function fetchPages(type,filter,pageSize,maxPages){
+  var out=[],pageToken='',useFilter=!!filter,usePS=!!pageSize;
+  for(var i=0;i<maxPages;i++){
+    var q=[];
+    if(useFilter)q.push('filter='+encodeURIComponent(filter));
+    if(usePS)q.push('pageSize='+pageSize);
+    if(pageToken)q.push('pageToken='+encodeURIComponent(pageToken));
+    var url=BASE+type+'/dataPoints'+(q.length?'?'+q.join('&'):'');
+    var res;
+    try{res=await fetch(url,{headers:{Authorization:'Bearer '+token}})}
+    catch(e){log(type+': request blocked by the browser (network or CORS).');throw new Error('network')}
+    if(!res.ok){
+      var body='';try{body=await res.text()}catch(e){}
+      if(res.status===400&&i===0&&(usePS||useFilter)){
+        if(usePS){usePS=false;log(type+': retrying without pageSize')}
+        else{useFilter=false;log(type+': retrying without date filter')}
+        i=-1;continue;
+      }
+      log(type+': HTTP '+res.status+' '+body.replace(/\s+/g,' ').slice(0,220));
+      if(res.status===401){token=null;tokenExp=0}
+      throw new Error('http'+res.status);
+    }
+    var j=await res.json();
+    (j.dataPoints||[]).forEach(function(p){out.push(p)});
+    pageToken=j.nextPageToken||'';
+    if(!pageToken)break;
+  }
+  log(type+': '+out.length+' data points');
+  return out;
+}
+
+async function syncAll(){
+  if(busy)return;
+  busy=true;logs=[];status='Loading your data from Google Health…';render();
+  var today=todayStr(),since=addDays(today,-35),zSince=addDays(today,-10);
+  var days={};
+  function get(k){return days[k]||(days[k]={})}
+  var jobs=[
+    ['daily-heart-rate-variability','daily_heart_rate_variability.date >= "'+since+'"',0,6,function(dp){
+      var o=dp.dailyHeartRateVariability;if(!o||!o.date)return;
+      var v=num(o.averageHeartRateVariabilityMilliseconds);if(v!=null)get(ds(o.date)).hrv=v;}],
+    ['daily-resting-heart-rate','daily_resting_heart_rate.date >= "'+since+'"',0,6,function(dp){
+      var o=dp.dailyRestingHeartRate;if(!o||!o.date)return;
+      var v=num(o.beatsPerMinute);if(v!=null)get(ds(o.date)).rhr=v;}],
+    ['daily-vo2-max','daily_vo2_max.date >= "'+since+'"',0,6,function(dp){
+      var o=dp.dailyVo2Max;if(!o||!o.date)return;
+      var v=num(o.vo2Max);if(v!=null)get(ds(o.date)).vo2=v;}],
+    ['sleep','sleep.interval.civil_end_time >= "'+since+'"',0,6,function(dp){
+      var s=dp.sleep;if(!s||!s.interval||!s.summary)return;
+      if(s.metadata&&s.metadata.main===false)return;
+      var off=parseInt(String(s.interval.endUtcOffset||'0'),10)||0;
+      var end=Date.parse(s.interval.endTime);if(!isFinite(end))return;
+      var d=new Date(end+off*1000);
+      var key=d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate());
+      var asleep=num(s.summary.minutesAsleep),inp=num(s.summary.minutesInSleepPeriod);
+      if(asleep==null)return;
+      var t=get(key);t.sleepMin=(t.sleepMin||0)+asleep;t.inBed=(t.inBed||0)+(inp!=null?inp:asleep);}],
+    ['time-in-heart-rate-zone','time_in_heart_rate_zone.interval.civil_start_time >= "'+zSince+'"',1000,30,function(dp){
+      var o=dp.timeInHeartRateZone;if(!o||!o.interval||!o.heartRateZoneType)return;
+      var c=o.interval.civilStartTime;if(!c||!c.date)return;
+      var a=Date.parse(o.interval.startTime),b=Date.parse(o.interval.endTime);
+      var mins=(isFinite(a)&&isFinite(b)&&b>a)?(b-a)/60000:1;
+      var t=get(ds(c.date));t.z=t.z||{};t.z[o.heartRateZoneType]=(t.z[o.heartRateZoneType]||0)+mins;}]
+  ];
+  var okCount=0;
+  for(var i=0;i<jobs.length;i++){
+    var j=jobs[i];
+    status='Loading '+j[0].replace(/-/g,' ')+'…';render();
+    try{var pts=await fetchPages(j[0],j[1],j[2],j[3]);pts.forEach(j[4]);okCount++}catch(e){}
+  }
+  Object.keys(days).forEach(function(k){
+    var d=days[k];
+    if(d.sleepMin!=null){d.sleepH=Math.round(d.sleepMin/6)/10;d.eff=d.inBed>0?Math.min(100,d.sleepMin/d.inBed*100):null}
+  });
+  if(okCount>0){
+    Object.keys(days).forEach(function(k){S.days[k]=days[k]});
+    S.synced=new Date().toISOString();save();
+    status='';
+  }else{
+    status='Nothing could be loaded. Open "Sync details" at the bottom to see why.';
+  }
+  busy=false;render();
+}
+
+function connect(){
+  if(!S.clientId)return;
+  if(token&&Date.now()<tokenExp){syncAll();return}
+  if(!(window.google&&google.accounts&&google.accounts.oauth2)){status='Google sign-in is still loading. Try again in a moment.';render();return}
+  var c=google.accounts.oauth2.initTokenClient({
+    client_id:S.clientId,scope:SCOPES,
+    callback:function(r){
+      if(r&&r.access_token){token=r.access_token;tokenExp=Date.now()+((r.expires_in||3000)-60)*1000;syncAll()}
+      else{status='Sign-in did not complete.'+(r&&r.error?' ('+r.error+')':'');render()}
+    },
+    error_callback:function(e){status='Sign-in was closed or blocked ('+((e&&e.type)||'error')+').';render()}
+  });
+  c.requestAccessToken({prompt:''});
+}
+
+/* ---------- scoring ---------- */
+var ZW={LIGHT:0.1,MODERATE:2,VIGOROUS:3.5,PEAK:5};
+function scoresFor(date){
+  var d=S.days[date],out={sleep:null,strain:null,trimp:0,recovery:null,note:''};
+  if(!d)return out;
+  var prior=dates().filter(function(k){return k<date}).slice(-30).map(function(k){return S.days[k]});
+  if(d.sleepH!=null){
+    var need=S.profile.sleepNeed||8,s=Math.min(d.sleepH/need,1)*100;
+    if(d.eff!=null)s=0.7*s+0.3*clamp(d.eff,0,100);
+    out.sleep=Math.round(s);
+  }
+  if(d.z){
+    var t=0;Object.keys(d.z).forEach(function(k){t+=d.z[k]*(ZW[k]!=null?ZW[k]:1)});
+    out.trimp=Math.round(t);out.strain=Math.round(21*(1-Math.exp(-t/250))*10)/10;
+  }
+  if(d.hrv==null||d.rhr==null){out.note='This day has no HRV or resting heart rate yet.';return out}
+  var hrvs=prior.filter(function(p){return p.hrv>0}).map(function(p){return Math.log(p.hrv)});
+  var rhrs=prior.filter(function(p){return p.rhr>0}).map(function(p){return p.rhr});
+  var have=Math.min(hrvs.length,rhrs.length);
+  if(have<4){out.note='Needs HRV and resting heart rate from '+(4-have)+' more earlier day'+((4-have)===1?'':'s')+' to set your baseline.';return out}
+  var parts=[[0.5,(Math.log(d.hrv)-mean(hrvs))/Math.max(sd(hrvs),0.08)],[0.3,-(d.rhr-mean(rhrs))/Math.max(sd(rhrs),1.5)]];
+  if(out.sleep!=null)parts.push([0.2,(out.sleep-80)/15]);
+  var w=parts.reduce(function(a,p){return a+p[0]},0);
+  var comp=clamp(parts.reduce(function(a,p){return a+p[0]*p[1]},0)/w,-3,3);
+  out.recovery=Math.round(100/(1+Math.exp(-(1.1*comp+0.5))));
+  return out;
+}
+function latestVo2(){
+  var ds_=dates().filter(function(k){return S.days[k].vo2!=null});
+  return ds_.length?S.days[ds_[ds_.length-1]].vo2:null;
+}
+function bioAge(){
+  var p=S.profile,vo2=latestVo2();
+  if(!p.age||!p.sex||vo2==null)return null;
+  var a=p.sex==='m'?49.5:42.9,b=p.sex==='m'?0.30:0.275;
+  var raw=(vo2-(a-b*p.age))/b;
+  var diff=clamp(raw,-15,15);
+  var fa=clamp(p.age-diff,18,90);
+  var last=dates().slice(-7).map(function(k){return S.days[k]});
+  var adj=[];
+  var rh=last.filter(function(x){return x.rhr>0}).map(function(x){return x.rhr});
+  if(rh.length){var m=mean(rh);adj.push({label:'Resting HR, 7-day avg '+Math.round(m)+' bpm',v:clamp((m-65)*0.3,-3,3)})}
+  var sl=last.filter(function(x){return x.sleepH>0}).map(function(x){return x.sleepH});
+  if(sl.length){var m2=mean(sl);adj.push({label:'Sleep, 7-day avg '+m2.toFixed(1)+' h',v:(m2>=7&&m2<=9)?-0.5:(m2>=6.5?0.5:2)})}
+  var hv=last.filter(function(x){return x.hrv>0}).map(function(x){return x.hrv});
+  if(hv.length){var m3=mean(hv),ex=Math.max(60-0.7*(p.age-20),15);adj.push({label:'HRV, 7-day avg '+Math.round(m3)+' ms',v:clamp(-6*Math.log(m3/ex),-3,3)})}
+  var total=clamp(fa+adj.reduce(function(s,x){return s+x.v},0),18,95);
+  return {fa:fa,adj:adj,total:total,vo2:vo2,capped:Math.abs(raw)>15};
+}
+
+/* ---------- drawing ---------- */
+function recColor(v){return v>=67?'var(--good)':v>=34?'var(--mid)':'var(--bad)'}
+function sleepColor(v){return v>=85?'var(--good)':v>=70?'var(--mid)':'var(--bad)'}
+function spark(vals,color){
+  var pts=[];vals.forEach(function(v,i){if(v!=null)pts.push([i,v])});
+  if(pts.length<2)return '<span class="small muted">not enough data</span>';
+  var ys=pts.map(function(p){return p[1]}),mn=Math.min.apply(null,ys),mx=Math.max.apply(null,ys);
+  var rng=(mx-mn)||1,W=160,H=44,N=(vals.length-1)||1;
+  var path=pts.map(function(p){return (p[0]/N*W).toFixed(1)+','+(H-4-((p[1]-mn)/rng)*(H-8)).toFixed(1)}).join(' ');
+  var l=pts[pts.length-1];
+  return '<svg class="spark" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trend"><polyline points="'+path+'" fill="none" stroke="'+color+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="'+(l[0]/N*W).toFixed(1)+'" cy="'+(H-4-((l[1]-mn)/rng)*(H-8)).toFixed(1)+'" r="3.2" fill="'+color+'"/></svg>';
+}
+function meter(label,valText,frac,color,sub){
+  return '<div class="meter"><div class="top"><span class="lab">'+label+'</span><span class="val">'+valText+'</span></div><div class="track"><div class="fill" style="width:'+(clamp(frac,0,1)*100).toFixed(0)+'%;background:'+color+'"></div></div><div class="subt">'+sub+'</div></div>';
+}
+
+/* ---------- views ---------- */
+function headerHtml(){
+  var right='';
+  if(S.clientId&&dates().length)right='<button class="btn sm" onclick="connect()" '+(busy?'disabled':'')+'>'+(busy?'Syncing…':'Sync now')+'</button>';
+  var sub=S.synced?'Last synced '+esc(new Date(S.synced).toLocaleString()):'Not synced yet';
+  return '<header><div><h1>Vitals</h1><div class="sub">'+sub+'</div></div>'+right+'</header>'+(status?'<div class="status">'+esc(status)+'</div>':'');
+}
+function setupHtml(){
+  return '<section><h2>Connect your Google client ID</h2><p class="note">Paste the OAuth client ID you created in Google Cloud. It ends in .apps.googleusercontent.com and is saved only in this browser.</p><label for="cid">Client ID</label><input id="cid" type="text" autocomplete="off" spellcheck="false" placeholder="1234567890-abc.apps.googleusercontent.com"><div class="btns"><button class="btn primary" onclick="saveCid()">Save client ID</button></div></section>';
+}
+function connectHtml(){
+  return '<section><h2>Sync your Google Health data</h2><p class="note">You will sign in with Google and approve read-only access to sleep, health metrics and activity. Your data is loaded into this browser and is not sent anywhere else.</p><div class="btns"><button class="btn primary" onclick="connect()" '+(busy?'disabled':'')+'>Sign in with Google</button></div></section>';
+}
+function dashHtml(){
+  var ds_=dates().filter(function(k){var d=S.days[k];return d.hrv!=null||d.rhr!=null||d.sleepMin!=null});
+  if(!ds_.length)return '<section><h2>No data found</h2><p class="note">Sync finished but returned no HRV, resting heart rate or sleep. Open Sync details below.</p></section>';
+  var date=ds_[ds_.length-1],d=S.days[date],s=scoresFor(date);
+  var rc=s.recovery==null?'rgba(255,255,255,.35)':recColor(s.recovery);
+  var msg=s.recovery==null?s.note:(s.recovery>=67?'Well recovered. Good day for hard training.':s.recovery>=34?'Moderate. Keep effort controlled.':'Low. Prioritise rest and sleep.');
+  var R=90,C=2*Math.PI*R,f=(s.recovery||0)/100;
+  var sleepSub=d.sleepH!=null?d.sleepH.toFixed(1)+' h asleep'+(d.eff!=null?', '+Math.round(d.eff)+'% efficiency':''):'No sleep found';
+  var strainTxt=s.strain==null?'–':s.strain.toFixed(1);
+  var hero='<section class="hero"><div class="date">'+nice(date)+'</div>'+
+    '<div class="ringwrap"><svg viewBox="0 0 220 220" role="img" aria-label="Recovery score"><circle cx="110" cy="110" r="'+R+'" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="14"/><circle cx="110" cy="110" r="'+R+'" fill="none" stroke="'+rc+'" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+(C*f).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 110 110)"/></svg><div class="ringtxt"><b>'+(s.recovery==null?'–':s.recovery)+'</b><span>Recovery</span></div></div>'+
+    '<p class="msg">'+esc(msg)+'</p><div class="two">'+
+    meter('Strain',strainTxt,(s.strain||0)/21,'#6FD3F2',s.strain==null?'no heart-rate zone data':'out of 21, load '+s.trimp)+
+    meter('Sleep',s.sleep==null?'–':s.sleep,(s.sleep||0)/100,s.sleep==null?'rgba(255,255,255,.3)':sleepColor(s.sleep),sleepSub)+
+    '</div></section>';
+  var b=bioAge(),bio;
+  if(!b){
+    bio='<section><h2>Estimated biological age</h2><p class="note">Set your age and sex under Settings below'+(latestVo2()==null?', and sync a VO2max reading':'')+' to see this.</p></section>';
+  }else{
+    var delta=b.total-S.profile.age;
+    bio='<section><h2>Estimated biological age</h2><div class="bio"><b>'+b.total.toFixed(1)+'</b><span class="'+(delta<=0?'good':'bad')+'">'+(delta>0?'+':'')+delta.toFixed(1)+' yrs vs your age '+S.profile.age+'</span></div>'+
+      '<ul class="lines"><li><span>Fitness age from VO2max '+b.vo2.toFixed(1)+(b.capped?' (capped at 15 yrs)':'')+'</span><span>'+b.fa.toFixed(1)+'</span></li>'+
+      b.adj.map(function(a){return '<li><span>'+a.label+'</span><span>'+(a.v>0?'+':'')+a.v.toFixed(1)+'</span></li>'}).join('')+'</ul>'+
+      '<p class="small muted">A heuristic estimate from wearable data, not a medical or lab result. True biological age needs blood biomarkers or epigenetic testing.</p></section>';
+  }
+  var last=ds_.slice(-14),trends='';
+  if(last.length>=2){
+    var rec=last.map(function(k){return scoresFor(k).recovery});
+    var hrv=last.map(function(k){return S.days[k].hrv!=null?S.days[k].hrv:null});
+    var rhr=last.map(function(k){return S.days[k].rhr!=null?S.days[k].rhr:null});
+    var str=last.map(function(k){return scoresFor(k).strain});
+    var row=function(l,vals,unit){
+      var lv=null;for(var i=vals.length-1;i>=0;i--){if(vals[i]!=null){lv=vals[i];break}}
+      return '<div class="trow"><div><div class="tl">'+l+'</div><div class="tv">'+(lv==null?'–':(Math.round(lv*10)/10))+unit+'</div></div>'+spark(vals,'var(--accent)')+'</div>';
+    };
+    trends='<section><h2>Last '+last.length+' days</h2>'+row('Recovery',rec,'')+row('HRV',hrv,' ms')+row('Resting HR',rhr,' bpm')+row('Strain',str,'')+'</section>';
+  }
+  return hero+bio+trends;
+}
+function settingsHtml(){
+  var p=S.profile,v=function(x){return x==null?'':x};
+  return '<details><summary>Settings</summary><div class="grid" style="margin-top:12px">'+
+    '<div><label for="p_age">Age</label><input id="p_age" type="number" inputmode="numeric" value="'+v(p.age)+'" oninput="setP(\'age\',num(this.value))"></div>'+
+    '<div><label for="p_sex">Sex (for VO2max norms)</label><select id="p_sex" onchange="setP(\'sex\',this.value||null)"><option value=""'+(p.sex?'':' selected')+'>Select</option><option value="m"'+(p.sex==='m'?' selected':'')+'>Male</option><option value="f"'+(p.sex==='f'?' selected':'')+'>Female</option></select></div>'+
+    '<div><label for="p_sn">Sleep need (hours)</label><input id="p_sn" type="number" inputmode="decimal" value="'+v(p.sleepNeed)+'" oninput="setP(\'sleepNeed\',num(this.value))"></div>'+
+    '<div><label for="p_cid">Google client ID</label><input id="p_cid" type="text" value="'+esc(S.clientId)+'" spellcheck="false" onchange="setCid(this.value)"></div>'+
+    '</div><p class="small muted">Changes apply the next time the dashboard redraws (tap Sync now).</p>'+
+    '<div class="btns"><button id="clr" class="btn sm" onclick="clearAll()">Erase saved data</button></div></details>';
+}
+function diagHtml(){
+  return '<details><summary>Sync details</summary><pre>'+(logs.length?esc(logs.join('\n')):'No sync yet in this session.')+'</pre></details>';
+}
+function render(){
+  var h=headerHtml();
+  if(!S.clientId)h+=setupHtml();
+  else if(!dates().length)h+=connectHtml();
+  else h+=dashHtml();
+  h+=settingsHtml()+diagHtml()+'<div class="footer">Scores are estimates for personal tracking, not medical advice. Data stays in this browser.</div>';
+  $('app').innerHTML=h;
+}
+
+/* ---------- actions ---------- */
+function saveCid(){
+  var v=($('cid').value||'').trim();
+  if(v.indexOf('.apps.googleusercontent.com')<0){status='That does not look like a Google client ID.';render();return}
+  S.clientId=v;status='';save();render();
+}
+function setCid(v){S.clientId=(v||'').trim();save()}
+function setP(k,v){S.profile[k]=v;save()}
+var armed=false;
+function clearAll(){
+  var b=$('clr');
+  if(!armed){armed=true;b.textContent='Tap again to erase';setTimeout(function(){armed=false;var x=$('clr');if(x)x.textContent='Erase saved data'},4000);return}
+  S.days={};S.synced=null;armed=false;save();render();
+}
+
+load();render();
+</script>
+</body>
+</html>
+index.html
+Displaying index.html.
