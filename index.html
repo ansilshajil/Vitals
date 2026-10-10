@@ -85,5 +85,10 @@ function render(){let h=headerHtml();h+=!S.clientId?setupHtml():!dates().length?
 function saveCid(){const v=($('cid').value||'').trim();if(!v.endsWith('.apps.googleusercontent.com')){status='That does not look like a Google OAuth client ID.';return render()}S.clientId=v;status='';save();render()}
 function setCid(v){S.clientId=(v||'').trim();save()}function setP(k,v){S.profile[k]=v;save();render()}function setTheme(v){S.theme=v;applyTheme();save();render()}
 let armed=false;function clearAll(){const b=$('clr');if(!armed){armed=true;b.textContent='Tap again to erase';setTimeout(()=>{armed=false;const x=$('clr');if(x)x.textContent='Erase saved health data'},4000);return}S.days={};S.synced=null;armed=false;save();render()}
-load();render();
-</script></body></html>
+load();
+render();
+</script>
+ 
+healthspan-polish.js?v=3.1script>
+</body>
+</html>
