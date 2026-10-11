@@ -22,7 +22,19 @@ async function fetchExercisePages(){
    const q=new URLSearchParams({filter,pageSize:String(Math.min(RUN_CONFIG.pageSize||25,25))});
    if(pageToken)q.set('pageToken',pageToken);
    const r=await fetch(`${BASE}exercise/dataPoints?${q}`,{headers:{Authorization:`Bearer ${token}`}});
-   if(!r.ok){const body=await r.text().catch(()=>'');throw new Error(`exercise HTTP ${r.status}: ${body.slice(0,500)}`)}
+   if (r.status === 500) {
+  logs.push(
+    `exercise: stopped at page ${page + 1} due to server error`
+  );
+  break;
+}
+
+if (!r.ok) {
+  const body = await r.text().catch(() => '');
+  throw new Error(
+    `exercise HTTP ${r.status}: ${body.slice(0,500)}`
+  );
+}
    const j=await r.json(),points=j.dataPoints||[];out.push(...points);pageToken=j.nextPageToken||'';
    if(Array.isArray(logs))logs.push(`exercise page ${page+1}: ${points.length} sessions`);
    if(!pageToken)break;
