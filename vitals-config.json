@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "runHistoryDays": 365,
   "exerciseTypes": ["RUNNING", "TRAIL_RUNNING", "TREADMILL_RUNNING"],
-  "pageSize": 100,
+  "pageSize": 25,
   "maxPages": 100,
   "dashboard": {
     "recentRuns": 10,
@@ -11,13 +11,5 @@
     "paceTrendRuns": 20,
     "splitChartLimit": 20
   },
-  "units": {
-    "distance": "km",
-    "pace": "min/km",
-    "elevation": "m"
-  },
-  "racePrediction": {
-    "enabled": true,
-    "wearableVo2ToVdotFactor": 0.9
-  }
+  "units": {"distance": "km", "pace": "min/km", "elevation": "m"}
 }
