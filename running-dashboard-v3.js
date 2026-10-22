@@ -181,10 +181,10 @@ function rhr365Chart() {
         ${points.map(p => `
 
           <circle
-            cx="${p.x}"
-            cy="${p.y}"
-            r="1.8"
-            fill="var(--accent)">
+  cx="${p.x}"
+  cy="${p.y}"
+  r="2.2"
+  fill="var(--accent)">
 
             <title>
 ${p.date}
